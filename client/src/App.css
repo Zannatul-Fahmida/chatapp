@@ -27,6 +27,10 @@
   padding-right: 20px;
 }
 
+.join-list p{
+  cursor: pointer;
+}
+
 .join-form{
   display: flex;
   flex-direction: column;
