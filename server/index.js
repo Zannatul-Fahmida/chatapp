@@ -58,6 +58,22 @@ io.on("connection", (socket) => {
     });
   });
 
+  socket.on("typing", ({ isTyping }) => {
+    const user = getUserById(socket.id);
+  
+    if (isTyping) {
+      io.to(user.room).emit("userTyping", {
+        user: user.name,
+        isTyping: true,
+      });
+    } else {
+      io.to(user.room).emit("userTyping", {
+        user: user.name,
+        isTyping: false,
+      });
+    }
+  });  
+
   socket.on("disconnect", () => {
     const user = removeUser(socket.id);
 

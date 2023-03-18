@@ -12,7 +12,7 @@ const addUser = ({ id, name, room }) => {
     return { error: "User already exists!" };
   }
 
-  const user = { id, name, room };
+  const user = { id, name, room, isTyping: false };
 
   users.push(user);
   return user;

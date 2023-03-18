@@ -11,6 +11,8 @@ const Chat = () => {
   const { name, room } = queryString.parse(search);
   const [messages, setMessages] = useState([]);
   const [users, setUsers] = useState([]);
+  const [isTyping, setIsTyping] = useState(false);
+  const [user, setUser] = useState("");
 
   useEffect(() => {
     socket = io("http://localhost:4000");
@@ -28,6 +30,11 @@ const Chat = () => {
       setUsers(roomUsers);
     });
 
+    socket.on("userTyping", ({ user, isTyping }) => {
+      setUser(user);
+      setIsTyping(isTyping);
+    });
+
     return () => {
       socket.disconnect();
     };
@@ -37,6 +44,17 @@ const Chat = () => {
     if (e.key === "Enter" && e.target.value) {
       socket.emit("message", e.target.value);
       e.target.value = "";
+      setIsTyping(false);
+    }
+  };
+
+  const handleTyping = (e) => {
+    if (e.target.value) {
+      setIsTyping(true);
+      socket.emit("typing", { name, isTyping: true });
+    } else {
+      setIsTyping(false);
+      socket.emit("typing", { name, isTyping: false });
     }
   };
 
@@ -64,8 +82,15 @@ const Chat = () => {
                 <span className="message-text">{message.text}</span>
               </div>
             ))}
+            {isTyping && (
+              <div className="message typing">{user} is typing...</div>
+            )}
           </ScrollToBottom>
-          <input placeholder="message" onKeyDown={sendMessage} />
+          <input
+            placeholder="message"
+            onKeyDown={sendMessage}
+            onKeyUp={handleTyping}
+          />
         </div>
       </div>
     </div>
