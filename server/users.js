@@ -36,9 +36,20 @@ const getRoomUsers = (room) => {
   return roomUsers;
 };
 
+const getRooms = () => {
+  const rooms = [];
+  users.forEach((user) => {
+    if (!rooms.includes(user.room)) {
+      rooms.push(user.room);
+    }
+  });
+  return rooms;
+};
+
 module.exports = {
   addUser,
   removeUser,
   getUserById,
   getRoomUsers,
+  getRooms,
 };

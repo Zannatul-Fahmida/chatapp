@@ -2,7 +2,7 @@ const express = require("express");
 const http = require("http");
 const socketIO = require("socket.io");
 const cors = require("cors");
-const { addUser, removeUser, getUserById, getRoomUsers } = require("./users");
+const { addUser, removeUser, getUserById, getRoomUsers, getRooms } = require("./users");
 
 const app = express();
 const port = 4000;
@@ -40,6 +40,10 @@ io.on("connection", (socket) => {
     const roomUsers = getRoomUsers(room);
     io.to(room).emit("userList", {
       roomUsers,
+    });
+
+    io.emit("roomList", {
+      rooms: getRooms(),
     });
 
     callback();
